@@ -1,0 +1,52 @@
+{
+  "name": "Mi Dinero Dev Environment",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "mi_dinero_app",
+  "workspaceFolder": "/app",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-azuretools.vscode-docker",
+        "eamodio.gitlens",
+        "dsznajder.es7-react-js-snippets",
+        "bradlc.vscode-tailwindcss",
+        "usernamehw.errorlens",
+        "christian-kohler.path-intellisense",
+        "christian-kohler.npm-intellisense"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "sh",
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        },
+        // TypeScript
+        "js/ts.tsdk.path": "node_modules/typescript/lib",
+        "js/ts.tsdk.promptToUseWorkspaceVersion": true,
+        // Vite
+        "files.exclude": {
+          "**/node_modules": true,
+          "**/dist": true
+        }
+      }
+    }
+  },
+
+  // "postCreateCommand": "npm install",
+
+  "postStartCommand": "git config --global --add safe.directory /app",
+
+  "shutdownAction": "stopCompose",
+
+  "forwardPorts": [3002, 5173],
+
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {}
+  }
+
+  // "remoteUser": "node"
+}
