@@ -3,7 +3,7 @@ import { useAuthStore } from "./stores/authStore";
 import Login from "./pages/Login";
 import type React from "react";
 import Dashboard from "./pages/Dashboard";
-// import Dashboard from "./pages/Dashboard";
+import Accounts from "./pages/Accounts";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -24,6 +24,14 @@ function App() {
           }
         />
         <Route path="/" element={<Navigate to="/dashboard" />} />
+        <Route
+          path="/accounts"
+          element={
+            <ProtectedRoute>
+              <Accounts />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
