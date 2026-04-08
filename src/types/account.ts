@@ -9,8 +9,8 @@ export interface Account {
   type: AccountType;
   balance: number;
   creditLimit?: number;
-  isActive: boolean;
-  isDefault: boolean;
+  isActive?: boolean;
+  isDefault?: boolean;
   createdAt: string;
   updatedAt: string;
   deletedAt?: string | null;
@@ -47,4 +47,4 @@ export const accountSchema = z
     },
   );
 
-export type AccountFormData = z.infer<typeof accountSchema>;
+export type AccountFormData = z.input<typeof accountSchema>;
