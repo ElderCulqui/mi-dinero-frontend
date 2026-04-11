@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { devtools } from "zustand/middleware";
+import { devtools, persist } from "zustand/middleware";
 import type { User } from "../types/auth";
 
 interface AuthState {
@@ -12,21 +12,22 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>()(
   devtools(
-    (set) => ({
-      user: null,
-      token: localStorage.getItem("token"),
-      isAuthenticated: !!localStorage.getItem("token"),
+    persist(
+      (set) => ({
+        user: null,
+        token: null,
+        isAuthenticated: false,
 
-      setAuth: (user, token) => {
-        localStorage.setItem("token", token);
-        set({ user, token, isAuthenticated: true });
-      },
+        setAuth: (user, token) => {
+          set({ user, token, isAuthenticated: true });
+        },
 
-      logout: () => {
-        localStorage.removeItem("token");
-        set({ user: null, token: null, isAuthenticated: false });
-      },
-    }),
+        logout: () => {
+          set({ user: null, token: null, isAuthenticated: false });
+        },
+      }),
+      { name: "auth-storage" },
+    ),
     { name: "AuthStore" },
   ),
 );

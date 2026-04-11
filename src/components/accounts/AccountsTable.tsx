@@ -9,6 +9,7 @@ import {
   Banknote,
 } from "lucide-react";
 import { toast } from "sonner";
+import { formatCurrency } from "../../lib/utils";
 
 import { type Account } from "../../types/account";
 import { accountService } from "../../services/accountService";
@@ -22,7 +23,6 @@ import {
   TableRow,
 } from "../ui/table";
 import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,7 +33,6 @@ import {
 import {
   AlertDialog,
   AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -57,26 +56,15 @@ const accountTypeConfig: Record<
     color: "bg-green-100 text-green-800",
   },
   tarjeta_credito: {
-    label: "Débito",
+    label: "Crédito",
     icon: CreditCard,
     color: "bg-blue-100 text-blue-800",
-  },
-  tarjeta_debito: {
-    label: "Crédito",
-    icon: Wallet,
-    color: "bg-purple-100 text-purple-800",
   },
   cuenta_bancaria: {
     label: "Cuenta Bancaria",
     icon: Wallet,
     color: "bg-gray-100 text-gray-800",
   },
-};
-
-const currencySymbols: Record<string, string> = {
-  PEN: "S/",
-  USD: "$",
-  EUR: "€",
 };
 
 export default function AccountsTable({
@@ -119,11 +107,6 @@ export default function AccountsTable({
       toast.error(message);
       console.error("Toggle account status error:", error);
     }
-  };
-
-  const formatCurrency = (amount: number, currency: string) => {
-    const symbol = currencySymbols[currency] || currency;
-    return `${symbol} ${amount.toFixed(2)}`;
   };
 
   if (accounts.length === 0) {
@@ -182,13 +165,12 @@ export default function AccountsTable({
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right font-medium">
-                      {/* {formatCurrency(account.balance, account.currency)} */}
-                      {account.balance}
+                      {formatCurrency(account.balance, "PEN")}
+                      {/* {account.balance} */}
                     </TableCell>
                     <TableCell className="text-right text-gray-500">
                       {account.type === "tarjeta_credito" && account.creditLimit
-                        ? // ? formatCurrency(account.creditLimit, account.currency)
-                          account.creditLimit
+                        ? formatCurrency(account.creditLimit, "PEN")
                         : "—"}
                     </TableCell>
                     <TableCell>
@@ -200,10 +182,8 @@ export default function AccountsTable({
                     </TableCell>
                     <TableCell>
                       <DropdownMenu>
-                        <DropdownMenuTrigger>
-                          <Button variant="ghost" size="icon">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
+                        <DropdownMenuTrigger className="inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground">
+                          <MoreHorizontal className="h-4 w-4" />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem onClick={() => onEdit(account)}>
