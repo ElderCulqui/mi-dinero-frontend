@@ -1,18 +1,16 @@
 import { useState } from "react";
 import {
   MoreHorizontal,
+  BanknoteArrowUp,
+  BanknoteArrowDown,
+  FolderOpen,
   Pencil,
   Trash2,
-  Power,
-  Wallet,
-  CreditCard,
-  Banknote,
 } from "lucide-react";
 import { toast } from "sonner";
-import { formatCurrency } from "../../lib/utils";
 
-import { type Account } from "../../types/account";
-import { accountService } from "../../services/accountService";
+import { type Category } from "@/types/category";
+import { categoryService } from "@/services/categoryService";
 
 import {
   Table,
@@ -21,15 +19,15 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../ui/table";
-import { Badge } from "../ui/badge";
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,86 +36,70 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "../ui/alert-dialog";
+} from "@/components/ui/alert-dialog";
 
-interface AccountsTableProps {
-  accounts: Account[];
-  onEdit: (account: Account) => void;
+interface CategoriesTableProps {
+  categories: Category[];
+  onEdit: (category: Category) => void;
   onRefresh: () => void;
 }
 
-const accountTypeConfig: Record<
+const transactionTypeConfig: Record<
   string,
   { label: string; icon: any; color: string }
 > = {
-  efectivo: {
-    label: "Efectivo",
-    icon: Banknote,
+  ingreso: {
+    label: "Ingreso",
+    icon: BanknoteArrowUp,
     color: "bg-green-100 text-green-800",
   },
-  tarjeta_credito: {
-    label: "Crédito",
-    icon: CreditCard,
+  egreso: {
+    label: "Egreso",
+    icon: BanknoteArrowDown,
     color: "bg-blue-100 text-blue-800",
-  },
-  cuenta_bancaria: {
-    label: "Cuenta Bancaria",
-    icon: Wallet,
-    color: "bg-gray-100 text-gray-800",
   },
 };
 
-export default function AccountsTable({
-  accounts,
+export default function CategoriesTable({
+  categories,
   onEdit,
   onRefresh,
-}: AccountsTableProps) {
+}: CategoriesTableProps) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [accountToDelete, setAccountToDelete] = useState<Account | null>(null);
+  const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(
+    null,
+  );
   const [loading, setLoading] = useState(false);
 
   const handleDelete = async () => {
-    if (!accountToDelete) return;
+    if (!categoryToDelete) return;
     setLoading(true);
 
     try {
-      await accountService.delete(accountToDelete.id);
-      toast.success("Cuenta eliminada exitosamente");
+      await categoryService.delete(categoryToDelete.id);
+      toast.success("Categoría eliminada exitosamente");
       onRefresh();
     } catch (error: any) {
       const message =
-        error.response?.data?.message || "Error al eliminar la cuenta";
+        error.response?.data?.message || "Error al eliminar la categoría";
       toast.error(message);
-      console.error("Delete account error:", error);
+      console.error("Delete category error:", error);
     } finally {
       setLoading(false);
       setDeleteDialogOpen(false);
-      setAccountToDelete(null);
+      setCategoryToDelete(null);
     }
   };
 
-  const handleToggleStatus = async (account: Account) => {
-    try {
-      await accountService.toggleStatus(account.id);
-      toast.success(`Cuenta ${account.isActive ? "desactivada" : "activada"}`);
-      onRefresh();
-    } catch (error: any) {
-      const message =
-        error.response?.data?.message || "Error al cambiar el estado";
-      toast.error(message);
-      console.error("Toggle account status error:", error);
-    }
-  };
-
-  if (accounts.length === 0) {
+  if (categories.length === 0) {
     return (
       <div className="text-center py-12 border rounded-lg bg-gray-50">
-        <Wallet className="mx-auto h-12 w-12 text-gray-400" />
+        <FolderOpen className="mx-auto h-12 w-12 text-gray-400" />
         <h3 className="mt-4 text-lg font-semibold text-gray-900">
-          No tienes cuentas registradas
+          No tienes categorías registradas
         </h3>
         <p className="mt-2 text-sm text-gray-500">
-          Comienza agregando tu primera cuenta
+          Comienza agregando tu primera categoría
         </p>
       </div>
     );
@@ -130,32 +112,27 @@ export default function AccountsTable({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Cuenta</TableHead>
+                <TableHead>Categoría</TableHead>
                 <TableHead>Tipo</TableHead>
-                <TableHead className="text-right">Saldo</TableHead>
-                <TableHead className="text-right">Límite</TableHead>
-                <TableHead>Estado</TableHead>
                 <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {accounts.map((account) => {
-                const typeConfig =
-                  accountTypeConfig[account.type] || accountTypeConfig.efectivo;
+              {categories.map((category) => {
+                const typeConfig = transactionTypeConfig[category.type];
                 const Icon = typeConfig.icon;
                 return (
-                  <TableRow key={account.id}>
+                  <TableRow key={category.id}>
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <div
                           className="w-10 h-10 rounded-full flex items-center justify-center"
-                          // style={{ backgroundColor: account?.color }}
+                          style={{ backgroundColor: category?.color }}
                         >
                           <Icon className="h-5 w-5" />
                         </div>
                         <div>
-                          <div className="font-medium">{account.name}</div>
-                          {/* <div className="text-sm text-gray-500">{account.currency}</div> */}
+                          <div className="font-medium">{category.name}</div>
                         </div>
                       </div>
                     </TableCell>
@@ -164,43 +141,21 @@ export default function AccountsTable({
                         {typeConfig.label}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-right font-medium">
-                      {formatCurrency(account.balance, "PEN")}
-                      {/* {account.balance} */}
-                    </TableCell>
-                    <TableCell className="text-right text-gray-500">
-                      {account.type === "tarjeta_credito" && account.creditLimit
-                        ? formatCurrency(account.creditLimit, "PEN")
-                        : "—"}
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={account.isActive ? "default" : "secondary"}
-                      >
-                        {account.isActive ? "Activa" : "Inactiva"}
-                      </Badge>
-                    </TableCell>
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger className="inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground">
                           <MoreHorizontal className="h-4 w-4" />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => onEdit(account)}>
+                          <DropdownMenuItem onClick={() => onEdit(category)}>
                             <Pencil className="mr-2 h-4 w-4" />
                             Editar
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleToggleStatus(account)}
-                          >
-                            <Power className="mr-2 h-4 w-4" />
-                            {account.isActive ? "Desactivar" : "Activar"}
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
                             className="text-red-600"
                             onClick={() => {
-                              setAccountToDelete(account);
+                              setCategoryToDelete(category);
                               setDeleteDialogOpen(true);
                             }}
                           >
@@ -218,7 +173,7 @@ export default function AccountsTable({
         </div>
 
         {/* Versión Mobile */}
-        <div className="md:hidden divide-y">
+        {/* <div className="md:hidden divide-y">
           {accounts.map((account) => {
             const typeConfig = accountTypeConfig[account.type];
             const Icon = typeConfig.icon;
@@ -301,7 +256,7 @@ export default function AccountsTable({
               </div>
             );
           })}
-        </div>
+        </div> */}
       </div>
 
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
@@ -310,7 +265,8 @@ export default function AccountsTable({
             <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
             <AlertDialogDescription>
               Esta acción no se puede deshacer. Se eliminará permanentemente la
-              cuenta <strong>{accountToDelete?.name}</strong> y todos sus datos.
+              cuenta <strong>{categoryToDelete?.name}</strong> y todos sus
+              datos.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

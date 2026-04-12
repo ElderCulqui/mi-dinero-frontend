@@ -15,10 +15,7 @@ import { Input } from "../ui/input";
 import { FieldDescription, Field, FieldLabel, FieldError } from "../ui/field";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 
-import { useAuthStore } from "../../stores/authStore";
-import { useEffect } from "react";
-
-interface AccountFromProps {
+interface AccountFormProps {
   account?: Account;
   onSuccess?: () => void;
   onCancel?: () => void;
@@ -51,10 +48,8 @@ export default function AccountForm({
   account,
   onSuccess,
   onCancel,
-}: AccountFromProps) {
+}: AccountFormProps) {
   const isEditing = !!account;
-
-  const { user } = useAuthStore();
 
   const form = useForm<AccountFormData>({
     resolver: zodResolver(accountSchema),
@@ -67,7 +62,6 @@ export default function AccountForm({
       // color: account?.color || '#3b82f6',
       isActive: account?.isActive ?? true,
       isDefault: account?.isDefault ?? false,
-      userId: user?.id,
     },
   });
 

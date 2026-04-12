@@ -1,44 +1,10 @@
 import { Link, useLocation } from "react-router-dom";
-import {
-  LayoutDashboard,
-  Wallet,
-  // CreditCard,
-  // TrendingUp,
-  // Settings,
-  LogOut,
-} from "lucide-react";
-import { cn } from "../../lib/utils";
-import { useAuthStore } from "../../stores/authStore";
-import { Button } from "../ui/button";
-import { Separator } from "../ui/separator";
-
-const menuItems = [
-  {
-    title: "Dashboard",
-    href: "/dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "Cuentas",
-    href: "/accounts",
-    icon: Wallet,
-  },
-  // {
-  //     title: 'Transacciones',
-  //     href: '/transactions',
-  //     icon: CreditCard,
-  // },
-  // {
-  //     title: 'Reportes',
-  //     href: '/reports',
-  //     icon: TrendingUp,
-  // },
-  // {
-  //     title: 'Configuración',
-  //     href: '/settings',
-  //     icon: Settings,
-  // },
-];
+import { LogOut } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useAuthStore } from "@/stores/authStore";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { menuItems } from "@/config/navigation";
 
 export default function Sidebar() {
   const location = useLocation();

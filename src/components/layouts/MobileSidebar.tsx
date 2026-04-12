@@ -1,45 +1,16 @@
 import { Link, useLocation } from "react-router-dom";
+import { LogOut } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useAuthStore } from "@/stores/authStore";
 import {
-  LayoutDashboard,
-  Wallet,
-  // CreditCard,
-  // TrendingUp,
-  // Settings,
-  LogOut,
-} from "lucide-react";
-import { cn } from "../../lib/utils";
-import { useAuthStore } from "../../stores/authStore";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
-import { Button } from "../ui/button";
-import { Separator } from "../ui/separator";
-
-const menuItems = [
-  {
-    title: "Dashboard",
-    href: "/dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "Cuentas",
-    href: "/accounts",
-    icon: Wallet,
-  },
-  // {
-  //   title: 'Transacciones',
-  //   href: '/transactions',
-  //   icon: CreditCard,
-  // },
-  // {
-  //   title: 'Reportes',
-  //   href: '/reports',
-  //   icon: TrendingUp,
-  // },
-  // {
-  //   title: 'Configuración',
-  //   href: '/settings',
-  //   icon: Settings,
-  // },
-];
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { menuItems } from "@/config/navigation";
 
 interface MobileSidebarProps {
   open: boolean;

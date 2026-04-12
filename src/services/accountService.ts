@@ -1,5 +1,5 @@
-import api from "./api";
-import { type Account, type AccountFormData } from "../types/account";
+import api from "@/services/api";
+import { type Account, type AccountFormData } from "@/types/account";
 
 export const accountService = {
   getAll: async (): Promise<Account[]> => {

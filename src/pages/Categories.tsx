@@ -1,11 +1,9 @@
-import { useState, useEffect } from "react";
-import { Plus, Loader2 } from "lucide-react";
-import { toast } from "sonner";
+import { useEffect, useState } from "react";
 
 import AppLayout from "@/components/layouts/AppLayout";
-import AccountsTable from "@/components/accounts/AccountsTable";
-import AccountForm from "@/components/accounts/AccountForm";
 import { Button } from "@/components/ui/button";
+import { Loader2, Plus } from "lucide-react";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -13,59 +11,63 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { Account } from "@/types/account";
-import { accountService } from "@/services/accountService";
+import CategoriesTable from "@/components/categories/CategoriesTable";
+import { categoryService } from "@/services/categoryService";
+import type { Category } from "@/types/category";
+import CategoryForm from "@/components/categories/CategoryForm";
 
-export default function Accounts() {
-  const [accounts, setAccounts] = useState<Account[]>([]);
+export default function Categories() {
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [editingAccount, setEditingAccount] = useState<Account | undefined>();
+  const [editingCategory, setEditingCategory] = useState<
+    Category | undefined
+  >();
 
-  const fetchAccounts = async () => {
+  const fetchCategories = async () => {
     try {
       setLoading(true);
-      const data = await accountService.getAll();
-      setAccounts(data);
+      const data = await categoryService.getAll();
+      setCategories(data);
     } catch (error) {
-      toast.error("Error al cargar las cuentas");
+      toast.error("Error al cargar las categorías");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchAccounts();
+    fetchCategories();
   }, []);
 
   const handleNew = () => {
-    setEditingAccount(undefined);
+    setEditingCategory(undefined);
     setDialogOpen(true);
   };
 
-  const handleEdit = (account: Account) => {
-    setEditingAccount(account);
+  const handleEdit = (category: Category) => {
+    setEditingCategory(category);
     setDialogOpen(true);
   };
 
   const handleSuccess = () => {
     setDialogOpen(false);
-    setEditingAccount(undefined);
-    fetchAccounts();
+    setEditingCategory(undefined);
+    fetchCategories();
   };
 
   const handleCancel = () => {
     setDialogOpen(false);
-    setEditingAccount(undefined);
+    setEditingCategory(undefined);
   };
 
   return (
     <AppLayout
-      title="Mis cuentas"
+      title="Mis categorías"
       actions={
         <Button onClick={handleNew}>
           <Plus className="mr-2 h-4 w-4" />
-          Nueva cuenta
+          Nueva categoría
         </Button>
       }
     >
@@ -74,10 +76,10 @@ export default function Accounts() {
           <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
         </div>
       ) : (
-        <AccountsTable
-          accounts={accounts}
+        <CategoriesTable
+          categories={categories}
           onEdit={handleEdit}
-          onRefresh={fetchAccounts}
+          onRefresh={fetchCategories}
         />
       )}
 
@@ -85,16 +87,16 @@ export default function Accounts() {
         <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {editingAccount ? "Editar cuenta" : "Nueva cuenta"}
+              {editingCategory ? "Editar categoría" : "Nueva categoría"}
             </DialogTitle>
             <DialogDescription>
-              {editingAccount
-                ? "Modifica los detalles de tu cuenta"
-                : "Completa el formulario para crear una nueva cuenta"}
+              {editingCategory
+                ? "Modifica los detalles de tu categoría"
+                : "Completa el formulario para crear una nueva categoría"}
             </DialogDescription>
           </DialogHeader>
-          <AccountForm
-            account={editingAccount}
+          <CategoryForm
+            category={editingCategory}
             onSuccess={handleSuccess}
             onCancel={handleCancel}
           />
