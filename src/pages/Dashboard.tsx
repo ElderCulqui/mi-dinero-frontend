@@ -17,7 +17,7 @@ import { exchangeRateService } from "@/services/exchangeRateService";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import type { ExchangeRate } from "@/types/exchangeRate";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, formatDate } from "@/lib/utils";
 
 export default function Dashboard() {
   const [exchangeRate, setExchangeRate] = useState<ExchangeRate | null>(null);
@@ -49,10 +49,10 @@ export default function Dashboard() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               Total
             </CardTitle>
-            <Wallet className="h-4 w-4 text-gray-600" />
+            <Wallet className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">S/ 12,450.00</div>
@@ -65,54 +65,54 @@ export default function Dashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               Ingresos
             </CardTitle>
             <TrendingUp className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">S/ 15,000.00</div>
-            <p className="text-xs text-gray-500 mt-1">Este mes</p>
+            <p className="text-xs text-muted-foreground mt-1">Este mes</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               Gastos
             </CardTitle>
             <TrendingDown className="h-4 w-4 text-red-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">S/ 2,550.00</div>
-            <p className="text-xs text-gray-500 mt-1">Este mes</p>
+            <p className="text-xs text-muted-foreground mt-1">Este mes</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               Tarjetas
             </CardTitle>
             <CreditCard className="h-4 w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">3</div>
-            <p className="text-xs text-gray-500 mt-1">Activas</p>
+            <p className="text-xs text-muted-foreground mt-1">Activas</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               Tipo de Cambio (USD/PEN)
             </CardTitle>
             <CreditCard className="h-4 w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(exchangeRate?.rate ?? 0, 'PEN')}</div>
-            <p className="text-xs text-gray-500 mt-1">
-              Fuente: {exchangeRate?.source || 'N/A'}
+            <div className="text-2xl font-bold">{formatCurrency(exchangeRate?.rate ?? 0, 'PEN', 3)}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Fuente: {exchangeRate?.source || "N/A"} - {exchangeRate?.createdAt ? formatDate(exchangeRate.createdAt) : "N/A"}
             </p>
           </CardContent>
         </Card>
@@ -124,7 +124,7 @@ export default function Dashboard() {
           <CardTitle>Transacciones Recientes</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-gray-500">No hay transacciones aún.</p>
+          <p className="text-sm text-muted-foreground">No hay transacciones aún.</p>
         </CardContent>
       </Card>
     </AppLayout>

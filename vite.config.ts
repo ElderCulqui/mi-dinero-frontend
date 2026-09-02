@@ -12,6 +12,7 @@ export default defineConfig({
     watch: {
       usePolling: true,
     },
+    allowedHosts: ["mi-dinero.homelab"]
   },
   resolve: {
     alias: {

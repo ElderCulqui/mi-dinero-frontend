@@ -51,12 +51,13 @@ const transactionTypeConfig: Record<
   ingreso: {
     label: "Ingreso",
     icon: BanknoteArrowUp,
-    color: "bg-green-100 text-green-800",
+    color:
+      "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
   },
   egreso: {
     label: "Egreso",
     icon: BanknoteArrowDown,
-    color: "bg-blue-100 text-blue-800",
+    color: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
   },
 };
 
@@ -93,12 +94,12 @@ export default function CategoriesTable({
 
   if (categories.length === 0) {
     return (
-      <div className="text-center py-12 border rounded-lg bg-gray-50">
-        <FolderOpen className="mx-auto h-12 w-12 text-gray-400" />
-        <h3 className="mt-4 text-lg font-semibold text-gray-900">
+      <div className="text-center py-12 border rounded-lg bg-muted/40">
+        <FolderOpen className="mx-auto h-12 w-12 text-muted-foreground" />
+        <h3 className="mt-4 text-lg font-semibold text-foreground">
           No tienes categorías registradas
         </h3>
-        <p className="mt-2 text-sm text-gray-500">
+        <p className="mt-2 text-sm text-muted-foreground">
           Comienza agregando tu primera categoría
         </p>
       </div>
@@ -107,7 +108,7 @@ export default function CategoriesTable({
 
   return (
     <>
-      <div className="rounded-lg border bg-white overflow-hidden">
+      <div className="rounded-lg border bg-card overflow-hidden">
         <div className="hidden md:block overflow-x-auto">
           <Table>
             <TableHeader>

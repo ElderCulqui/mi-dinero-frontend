@@ -11,7 +11,7 @@ export default function Sidebar() {
   const logout = useAuthStore((state) => state.logout);
 
   return (
-    <div className="hidden md:flex h-screen w-64 flex-col fixed left-0 top-0 border-r bg-gray-50/40">
+    <div className="hidden md:flex h-screen w-64 flex-col fixed left-0 top-0 border-r bg-sidebar">
       {/* Logo */}
       <div className="p-6">
         <h1 className="text-2xl font-bold text-primary">Mi Dinero</h1>
@@ -32,7 +32,7 @@ export default function Sidebar() {
                   "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors",
                   isActive
                     ? "bg-primary text-primary-foreground"
-                    : "hover:bg-gray-100 text-gray-700",
+                    : "hover:bg-sidebar-accent text-sidebar-accent-foreground",
                 )}
               >
                 <Icon className="h-5 w-5" />
@@ -49,7 +49,7 @@ export default function Sidebar() {
       <div className="p-4">
         <Button
           variant="ghost"
-          className="w-full justify-start gap-3 text-gray-700 hover:bg-gray-100"
+          className="w-full justify-start gap-3 text-sidebar-foreground hover:bg-sidebar-accent"
           onClick={logout}
         >
           <LogOut className="h-5 w-5" />

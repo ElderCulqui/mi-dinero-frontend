@@ -53,17 +53,18 @@ const accountTypeConfig: Record<
   efectivo: {
     label: "Efectivo",
     icon: Banknote,
-    color: "bg-green-100 text-green-800",
+    color:
+      "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
   },
   tarjeta_credito: {
     label: "Crédito",
     icon: CreditCard,
-    color: "bg-blue-100 text-blue-800",
+    color: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
   },
   cuenta_bancaria: {
     label: "Cuenta Bancaria",
     icon: Wallet,
-    color: "bg-gray-100 text-gray-800",
+    color: "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200",
   },
 };
 
@@ -111,12 +112,12 @@ export default function AccountsTable({
 
   if (accounts.length === 0) {
     return (
-      <div className="text-center py-12 border rounded-lg bg-gray-50">
-        <Wallet className="mx-auto h-12 w-12 text-gray-400" />
-        <h3 className="mt-4 text-lg font-semibold text-gray-900">
+      <div className="text-center py-12 border rounded-lg bg-muted/40">
+        <Wallet className="mx-auto h-12 w-12 text-muted-foreground" />
+        <h3 className="mt-4 text-lg font-semibold text-foreground">
           No tienes cuentas registradas
         </h3>
-        <p className="mt-2 text-sm text-gray-500">
+        <p className="mt-2 text-sm text-muted-foreground">
           Comienza agregando tu primera cuenta
         </p>
       </div>
@@ -125,7 +126,7 @@ export default function AccountsTable({
 
   return (
     <>
-      <div className="rounded-lg border bg-white overflow-hidden">
+      <div className="rounded-lg border bg-card overflow-hidden">
         <div className="hidden md:block overflow-x-auto">
           <Table>
             <TableHeader>
@@ -168,7 +169,7 @@ export default function AccountsTable({
                       {formatCurrency(account.balance, "PEN")}
                       {/* {account.balance} */}
                     </TableCell>
-                    <TableCell className="text-right text-gray-500">
+                    <TableCell className="text-right text-muted-foreground">
                       {account.type === "tarjeta_credito" && account.creditLimit
                         ? formatCurrency(account.creditLimit, "PEN")
                         : "—"}
@@ -283,7 +284,7 @@ export default function AccountsTable({
 
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div>
-                    <div className="text-gray-500">Saldo</div>
+                    <div className="text-muted-foreground">Saldo</div>
                     <div className="font-medium">
                       {formatCurrency(account.balance, "PEN")}
                     </div>
@@ -291,7 +292,7 @@ export default function AccountsTable({
                   {account.type === "tarjeta_credito" &&
                     account.creditLimit && (
                       <div>
-                        <div className="text-gray-500">Límite</div>
+                        <div className="text-muted-foreground">Límite</div>
                         <div className="font-medium">
                           {formatCurrency(account.creditLimit, "PEN")}
                         </div>

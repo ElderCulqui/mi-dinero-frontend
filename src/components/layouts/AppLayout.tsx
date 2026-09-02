@@ -14,7 +14,7 @@ export default function AppLayout({
   actions,
 }: AppLayoutProps) {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <Sidebar />
 
       <div className="md:pl-64">
@@ -25,7 +25,7 @@ export default function AppLayout({
           {(title || actions) && (
             <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               {title && (
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+                <h1 className="text-2xl md:text-3xl font-bold text-foreground">
                   {title}
                 </h1>
               )}

@@ -11,11 +11,14 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { useAuthStore } from "../../stores/authStore";
+import { useThemeStore } from "../../stores/themeStore";
 import MobileSidebar from "./MobileSidebar";
+import { Sun, Moon } from "lucide-react";
 
 export default function Header() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, logout } = useAuthStore();
+  const { theme, toggleTheme } = useThemeStore();
 
   const getInitials = (name: string) => {
     return name
@@ -27,7 +30,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 border-b bg-white">
+      <header className="sticky top-0 z-40 border-b bg-card">
         <div className="flex h-16 items-center gap-4 px-4 md:px-6">
           <Button
             variant="ghost"
@@ -39,6 +42,20 @@ export default function Header() {
           </Button>
 
           <div className="flex-1" />
+
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            aria-label="Cambiar tema"
+            title={theme === "dark" ? "Modo claro" : "Modo oscuro"}
+          >
+            {theme === "dark" ? (
+              <Sun className="h-5 w-5" />
+            ) : (
+              <Moon className="h-5 w-5" />
+            )}
+          </Button>
 
           <Button variant="ghost" size="icon" className="relative">
             <Bell className="h-5 w-5" />
