@@ -9,10 +9,10 @@ import {
   Banknote,
 } from "lucide-react";
 import { toast } from "sonner";
-import { formatCurrency } from "../../lib/utils";
+import { formatCurrency } from "@/lib/utils";
 
-import { type Account } from "../../types/account";
-import { accountService } from "../../services/accountService";
+import { type Account } from "@/types/account";
+import { accountService } from "@/services/accountService";
 
 import {
   Table,
@@ -21,15 +21,15 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../ui/table";
-import { Badge } from "../ui/badge";
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,7 +38,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "../ui/alert-dialog";
+} from "@/components/ui/alert-dialog";
 
 interface AccountsTableProps {
   accounts: Account[];

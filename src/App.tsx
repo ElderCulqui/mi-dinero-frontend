@@ -4,7 +4,9 @@ import Login from "@/pages/Login";
 import type React from "react";
 import Dashboard from "@/pages/Dashboard";
 import Accounts from "@/pages/Accounts";
-import Categories from "./pages/Categories";
+import Categories from "@/pages/Categories";
+import Cards from "@/pages/Cards";
+import CardShow from "./pages/CardShow";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -38,6 +40,22 @@ function App() {
           element={
             <ProtectedRoute>
               <Categories />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/cards"
+          element={
+            <ProtectedRoute>
+              <Cards />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/cards/:id"
+          element={
+            <ProtectedRoute>
+              <CardShow />
             </ProtectedRoute>
           }
         />

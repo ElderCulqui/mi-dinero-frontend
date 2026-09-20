@@ -11,4 +11,9 @@ export const exchangeRateService = {
     );
     return data;
   },
+
+  sync: async (): Promise<ExchangeRate> => {
+    const { data } = await api.post('/exchange-rates/sync');
+    return data;
+  }
 };
