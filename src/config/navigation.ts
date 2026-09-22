@@ -1,4 +1,4 @@
-import { LayoutDashboard, Wallet, FolderOpen, CreditCard } from "lucide-react";
+import { LayoutDashboard, Wallet, FolderOpen, CreditCard, ArrowLeftRight } from "lucide-react";
 // import { CreditCard, TrendingUp, Settings } from "lucide-react";
 
 export const menuItems = [
@@ -6,6 +6,11 @@ export const menuItems = [
     title: "Dashboard",
     href: "/dashboard",
     icon: LayoutDashboard,
+  },
+  {
+    title: "Transacciones",
+    href: "/transactions",
+    icon: ArrowLeftRight,
   },
   {
     title: "Cuentas",

@@ -1,12 +1,15 @@
 import { z } from "zod";
+import type { Currency } from "./currency";
 
 export type AccountType = "efectivo" | "cuenta_bancaria" | "tarjeta_credito";
 
 export interface Account {
   id: string;
   userId: number;
+  creditCardId: number;
   name: string;
   type: AccountType;
+  currency?: Currency;
   balance: number;
   creditLimit?: number;
   isActive?: boolean;
@@ -22,10 +25,11 @@ export const accountSchema = z
       .string()
       .min(2, "El nombre debe tener al menos 2 caracteres")
       .max(50, "El nombre no puede exceder 50 caracteres"),
-    type: z.string(),
-    userId: z.number("El ID de usuario debe ser un número"),
+    type: z.enum(["efectivo", "cuenta_bancaria", "tarjeta_credito"]),
+    creditCardId: z.number().nullable().optional(),
+    currency: z.enum(["PEN", "USD"]).optional(),
     balance: z.number().optional(),
-    creditLimit: z.number().optional(),
+    creditLimit: z.number().min(0).optional(),
     isActive: z.boolean().default(true),
     isDefault: z.boolean().default(false),
   })
@@ -35,14 +39,14 @@ export const accountSchema = z
         return (
           data.creditLimit !== null &&
           data.creditLimit !== undefined &&
-          data.creditLimit > 0
+          data.creditLimit >= 0
         );
       }
       return true;
     },
     {
       message:
-        "El límite de crédito es obligatorio y debe ser mayor a 0 para cuentas de tipo 'tarjeta_credito'",
+        "El límite de crédito es obligatorio y debe ser mayor o igual a 0 para cuentas de tipo 'tarjeta_credito'",
       path: ["creditLimit"],
     },
   );

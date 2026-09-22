@@ -166,12 +166,12 @@ export default function AccountsTable({
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right font-medium">
-                      {formatCurrency(account.balance, "PEN")}
+                      {formatCurrency(account.balance, account.currency ?? "PEN")}
                       {/* {account.balance} */}
                     </TableCell>
                     <TableCell className="text-right text-muted-foreground">
                       {account.type === "tarjeta_credito" && account.creditLimit
-                        ? formatCurrency(account.creditLimit, "PEN")
+                        ? formatCurrency(account.creditLimit, account.currency ?? "PEN")
                         : "—"}
                     </TableCell>
                     <TableCell>

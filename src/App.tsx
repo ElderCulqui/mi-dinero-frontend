@@ -7,6 +7,7 @@ import Accounts from "@/pages/Accounts";
 import Categories from "@/pages/Categories";
 import Cards from "@/pages/Cards";
 import CardShow from "./pages/CardShow";
+import Transactions from "./pages/Transactions";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -27,6 +28,14 @@ function App() {
           }
         />
         <Route path="/" element={<Navigate to="/dashboard" />} />
+        <Route
+          path="/transactions"
+          element={
+            <ProtectedRoute>
+              <Transactions />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/accounts"
           element={

@@ -1,7 +1,7 @@
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Loader2, Wallet, CreditCard, Banknote } from "lucide-react";
+import { Loader2, Wallet, CreditCard, Banknote, FileEdit } from "lucide-react";
 
 import {
   accountSchema,
@@ -14,9 +14,14 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { FieldDescription, Field, FieldLabel, FieldError } from "../ui/field";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
+import type { Card } from "@/types/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { currencyOptions, type Currency } from "@/types/currency";
+import axios from "axios";
 
 interface AccountFormProps {
   account?: Account;
+  creditCards?: Card[];
   onSuccess?: () => void;
   onCancel?: () => void;
 }
@@ -27,11 +32,11 @@ const accountTypes = [
   { value: "tarjeta_credito", label: "Tarjeta Crédito", icon: CreditCard },
 ];
 
-// const currencies = [
-//   { value: "PEN", label: "Soles (S/)", symbol: "S/" },
-//   { value: "USD", label: "Dólares ($)", symbol: "$" },
-//   { value: "EUR", label: "Euros (€)", symbol: "€" },
-// ];
+const currencies = Object.values(currencyOptions) as Array<{
+  code: Currency;
+  symbol: string;
+  label: string;
+}>;
 
 // const colors = [
 //   "#3b82f6",
@@ -46,6 +51,7 @@ const accountTypes = [
 
 export default function AccountForm({
   account,
+  creditCards,
   onSuccess,
   onCancel,
 }: AccountFormProps) {
@@ -58,12 +64,18 @@ export default function AccountForm({
       type: account?.type || "efectivo",
       balance: account?.balance || 0,
       creditLimit: account?.creditLimit || 0,
-      // currency: account?.currency || 'PEN',
+      currency: account?.currency || 'PEN',
+      creditCardId: account?.creditCardId ?? null,
       // color: account?.color || '#3b82f6',
       isActive: account?.isActive ?? true,
       isDefault: account?.isDefault ?? false,
     },
   });
+
+  const creditCardOptions = (creditCards ?? []).map((creditCard) => ({
+    value: String(creditCard.id),
+    label: `${creditCard.brand} (${creditCard.name})`,
+  }));
 
   const accountType = form.watch("type");
   //   const selectedColor = form.watch("color");
@@ -78,12 +90,28 @@ export default function AccountForm({
         toast.success("Cuenta creada exitosamente");
       }
       onSuccess?.();
-    } catch (error: any) {
-      const message =
-        error.response?.data?.message || "Error al guardar la cuenta";
-      toast.error(message);
-      console.error("Account form error:", error);
-    }
+    } catch (error: unknown) {
+            const apiErrors = axios.isAxiosError(error)
+                ? error.response?.data?.errors
+                : undefined;
+
+            if (Array.isArray(apiErrors)) {
+                for (const apiError of apiErrors) {
+                    const field = apiError.path as keyof AccountFormData;
+                    if (field in form.getValues()) {
+                        form.setError(field, {
+                            type: "server",
+                            message: apiError.msg,
+                        });
+                    } else {
+                        form.setError("root", {
+                            type: "server",
+                            message: apiError.msg,
+                        })
+                    }
+                }
+            }
+        }
   };
 
   return (
@@ -97,7 +125,21 @@ export default function AccountForm({
             <Tabs
               className="w-full"
               value={field.value}
-              onValueChange={field.onChange}
+              onValueChange={(value) => {
+                field.onChange(value);
+
+                if (value !== "tarjeta_credito") {
+                  form.setValue("creditCardId", null, {
+                    shouldDirty: true,
+                    shouldValidate: true,
+                  })
+
+                  form.setValue("creditLimit", undefined, {
+                    shouldDirty: true,
+                    shouldValidate: true,
+                  });
+                }
+              }}
             >
               <TabsList className="grid w-full grid-cols-3">
                 {accountTypes.map((type) => {
@@ -129,23 +171,100 @@ export default function AccountForm({
         <FieldError errors={[form.formState.errors.name]} />
       </Field>
 
+      <Field>
+        <FieldLabel>Moneda de la tarjeta</FieldLabel>
+        <Controller
+          control={form.control}
+          name="currency"
+          render={({ field }) => (
+            <Select
+              value={field.value}
+              onValueChange={(value) => field.onChange(value)}
+            >
+              <SelectTrigger className="w-full" aria-invalid={!!form.formState.errors.currency}>
+                <SelectValue placeholder="Selecciona una moneda" />
+              </SelectTrigger>
+              <SelectContent>
+                {currencies.map((currency) => (
+                  <SelectItem key={currency.code} value={currency.code}>
+                    {currency.label} ({currency.symbol})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
+        <FieldError errors={[form.formState.errors.currency]} />
+      </Field>
+
       {accountType === "tarjeta_credito" && (
-        <Field orientation="horizontal">
-          <FieldLabel>Límite de Crédito</FieldLabel>
-          <Input
-            type="number"
-            placeholder="5000"
-            min={0}
-            step={0.01}
-            required
-            {...form.register("creditLimit", { valueAsNumber: true })}
-          />
-          <FieldError errors={[form.formState.errors.creditLimit]} />
-          <FieldDescription>
-            Define el límite de crédito para esta cuenta. Solo aplica para
-            tarjetas de crédito.
-          </FieldDescription>
-        </Field>
+        <>
+          <Field>
+                  <FieldLabel>Tarjeta de crédito</FieldLabel>
+                  <Controller
+                    control={form.control}
+                    name="creditCardId"
+                    render={({ field }) => (
+                      <Select
+                        items={creditCardOptions}
+                        value={field.value === null ? null : String(field.value)}
+                        onValueChange={(value) => {
+                          field.onChange(value ? Number(value) : null);
+                        }}
+                      >
+                        <SelectTrigger 
+                          className="w-full" 
+                          aria-invalid={!!form.formState.errors.creditCardId}
+                        >
+                          <SelectValue>
+                            {(value) => 
+                              creditCardOptions.find(
+                                (option) => option.value === String(value),
+                              )?.label ?? "Selecciona una tarjeta"
+                            }
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          {creditCardOptions?.map((creditCard) => (
+                            <SelectItem
+                              key={creditCard.value}
+                              value={creditCard.value}
+                            >
+                              {creditCard.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  <FieldError errors={[form.formState.errors.creditCardId]} />
+          </Field>
+          <Field orientation="horizontal">
+            <FieldLabel>Límite de Crédito</FieldLabel>
+            <Input
+              type="number"
+              placeholder="5000"
+              min={0}
+              step={0.01}
+              required
+              {...form.register("creditLimit", { 
+                setValueAs: (value) => {
+                  if (value === "") {
+                    return undefined;
+                  }
+
+                  const numberValue = Number(value);
+                  return Number.isNaN(numberValue) ? undefined : numberValue;
+                },
+               })}
+            />
+            <FieldError errors={[form.formState.errors.creditLimit]} />
+            <FieldDescription>
+              Define el límite de crédito para esta cuenta. Solo aplica para
+              tarjetas de crédito.
+            </FieldDescription>
+          </Field>
+        </>
       )}
 
       {form.formState.errors ? (

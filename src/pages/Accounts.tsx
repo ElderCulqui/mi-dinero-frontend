@@ -15,9 +15,12 @@ import {
 } from "@/components/ui/dialog";
 import type { Account } from "@/types/account";
 import { accountService } from "@/services/accountService";
+import type { Card } from "@/types/card";
+import { cardService } from "@/services/cardService";
 
 export default function Accounts() {
   const [accounts, setAccounts] = useState<Account[]>([]);
+  const [creditCards, setCreditCards] = useState<Card[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingAccount, setEditingAccount] = useState<Account | undefined>();
@@ -34,8 +37,18 @@ export default function Accounts() {
     }
   };
 
+  const fetchCreditCards = async () => {
+    try {
+      const data = await cardService.getAll();
+      setCreditCards(data);
+    } catch (error) {
+      toast.error("Error al cargar las tarjetas");
+    }
+  };
+
   useEffect(() => {
     fetchAccounts();
+    fetchCreditCards();
   }, []);
 
   const handleNew = () => {
@@ -95,6 +108,7 @@ export default function Accounts() {
           </DialogHeader>
           <AccountForm
             account={editingAccount}
+            creditCards={creditCards.filter((card) => card.isActive)}
             onSuccess={handleSuccess}
             onCancel={handleCancel}
           />

@@ -1,6 +1,5 @@
 import { z } from "zod";
-
-export type TransactionType = "ingreso" | "egreso";
+import type { TransactionType } from "./transactionType";
 
 export interface Category {
   id: string;
