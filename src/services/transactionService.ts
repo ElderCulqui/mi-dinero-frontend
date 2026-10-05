@@ -4,7 +4,6 @@ import type {
     TransactionFormData,
     TransactionsResponse,
 } from "@/types/transaction";
-import { number } from "zod";
 
 const path = "/transactions";
 
@@ -23,7 +22,7 @@ export const transactionService = {
         return data;
     },
     
-    getById: async (id: string): Promise<Transaction> => {
+    getById: async (id: number): Promise<Transaction> => {
         const { data } = await api.get<Transaction>(`${path}/${id}`);
         return data;
     },

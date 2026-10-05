@@ -56,12 +56,19 @@ export interface TransactionsResponse {
 }
 
 export const transactionSchema = z.object({
-  accountId: z.number().positive(),
-  categoryId: z.number().optional(),
+  accountId: z
+    .number({ error: "Selecciona una cuenta" })
+    .int()
+    .positive("Selecciona una cuenta"),
+  categoryId: z.number().int().positive().nullable().optional(),
   type: z.enum(["ingreso", "egreso"]),
-  date: z.string().min(1, "La fecha es obligatoria"),
-  amount: z.number().min(0.01, "El monto es obligatorio"),
-  description: z.string().optional(),
+  date: z
+    .string({ error: "La fecha es obligatoria" })
+    .min(1, "La fecha es obligatoria"),
+  amount: z
+    .number({ error: "El monto es obligatorio" })
+    .min(0.01, "El monto debe ser mayor a 0"),
+  description: z.string().max(255).optional(),
 });
 
 export type TransactionFormData = z.input<typeof transactionSchema>;

@@ -1,7 +1,7 @@
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Loader2, Wallet, CreditCard, Banknote, FileEdit } from "lucide-react";
+import { Loader2, Wallet, CreditCard, Banknote } from "lucide-react";
 
 import {
   accountSchema,

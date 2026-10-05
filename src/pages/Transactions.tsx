@@ -3,10 +3,12 @@ import TransactionForm from "@/components/transactions/TransactionForm";
 import TransactionsTable from "@/components/transactions/TransactionsTable";
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { getApiErrorMessage } from "@/lib/utils";
 import { transactionService } from "@/services/transactionService";
 import type { Transaction, TransactionPagination } from "@/types/transaction";
 import { Loader2, Plus } from "lucide-react"
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const defaultPagination: TransactionPagination = {
   page: 1,
@@ -48,7 +50,9 @@ export default function Transactions() {
           setTransactions(response.data);
           setPagination(response.pagination);
         } catch (error) {
-          
+          toast.error(
+            getApiErrorMessage(error, "Error al cargar las transacciones"),
+          );
         } finally {
           if (!cancelled) {
             setLoading(false)
@@ -79,13 +83,20 @@ export default function Transactions() {
       if (transactions.length === 1 && page > 1) {
         setPage((currentPage) => currentPage - 1);
       } else {
-        setReloadKey((currentKey) => currentKey - 1);
+        setReloadKey((currentKey) => currentKey + 1);
       }
     };
 
     const handleSuccess = () => {
+      const wasCreating = !editingTxn;
+
       setDialogOpen(false);
       setEditingTxn(undefined);
+
+      if (wasCreating) {
+        setPage(1);
+      }
+
       setReloadKey((currentKey) => currentKey + 1);
     };
 
@@ -145,7 +156,7 @@ export default function Transactions() {
               <DialogDescription>
                 {editingTxn
                   ? "Modifica los detalles de una transacción"
-                  : "Completa el formulario para crear una nueva cuenta"}
+                  : "Completa el formulario para crear una transacción"}
               </DialogDescription>
             </DialogHeader>
             <TransactionForm
