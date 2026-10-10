@@ -68,7 +68,7 @@ export default function ExchangeRateCard() {
                     {formatCurrency(exchangeRate?.rate ?? 0, "PEN", 3)}
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
-                    Fuente: {exchangeRate?.source || "N/A"} - {" "}
+                    Fuente: {exchangeRate?.source || "N/A"} · {exchangeRate?.side === "buy" ? "Compra" : "Venta"} - {" "}
                 {exchangeRate?.updatedAt ? formatDate(exchangeRate.updatedAt) : "N/A"}
                 </p>
             </CardContent>

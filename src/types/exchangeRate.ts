@@ -5,6 +5,7 @@ export interface ExchangeRate {
   rate: number;
   source: string;
   date: string;
+  side: "buy" | "sell";
   createdAt: string;
   updatedAt: string;
 }

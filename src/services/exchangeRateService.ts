@@ -7,7 +7,7 @@ export const exchangeRateService = {
     targetCurrency: string,
   ): Promise<ExchangeRate> => {
     const { data } = await api.get(
-      `/exchange-rates/latest?base=${baseCurrency}&target=${targetCurrency}`,
+      `/exchange-rates/latest?baseCurrency=${baseCurrency}&targetCurrency=${targetCurrency}&side=sell`,
     );
     return data;
   },
