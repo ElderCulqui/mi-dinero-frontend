@@ -1,4 +1,4 @@
-import { LayoutDashboard, Wallet, FolderOpen, CreditCard, ArrowLeftRight } from "lucide-react";
+import { LayoutDashboard, Wallet, FolderOpen, CreditCard, ArrowLeftRight, Users, Repeat } from "lucide-react";
 // import { CreditCard, TrendingUp, Settings } from "lucide-react";
 
 export const menuItems = [
@@ -27,16 +27,16 @@ export const menuItems = [
     href: "/cards",
     icon: CreditCard,
   },
-  // {
-  //   title: "Transacciones",
-  //   href: "/transactions",
-  //   icon: CreditCard,
-  // },
-  // {
-  //   title: "Reportes",
-  //   href: "/reports",
-  //   icon: TrendingUp,
-  // },
+  {
+    title: "Contactos",
+    href: "/contacts",
+    icon: Users,
+  },
+  {
+    title: "Transferencias",
+    href: "/transfers",
+    icon: Repeat,
+  },
   // {
   //   title: "Configuración",
   //   href: "/settings",

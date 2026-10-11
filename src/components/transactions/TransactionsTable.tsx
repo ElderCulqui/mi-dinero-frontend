@@ -8,7 +8,7 @@ import {
 } from "@tanstack/react-table"
 import { Badge } from "../ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import { Loader2, MoreHorizontal, Pencil, ReceiptText, Trash2 } from "lucide-react";
+import { Loader2, MoreHorizontal, Pencil, ReceiptText, Trash2, Users } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
@@ -20,6 +20,7 @@ interface TransactionsTableProps {
     transactions: Transaction[];
     pagination: TransactionPagination;
     loading?: boolean;
+    onSplit: (transaction: Transaction) => void;
     onEdit: (transaction: Transaction) => void;
     onDelete: (transaction: Transaction) => Promise<void> | void;
     onPageChange: (page: number) => void;
@@ -81,6 +82,7 @@ const sourceLabels: Record<Transaction["source"], string> = {
 function createColumns(
     onEdit: (transaction: Transaction) => void,
     onRequestDelete: (transaction: Transaction) => void,
+    onSplit: (transaction: Transaction) => void,
 ): TransactionColumnDef[] {
     return columnHelper.columns([
         columnHelper.accessor("date", {
@@ -231,6 +233,15 @@ function createColumns(
                                     <Pencil className="mr-2 h-4 w-4" />
                                     Editar
                                 </DropdownMenuItem>
+
+                                {transaction.type === "egreso" ? (
+                                    <DropdownMenuItem
+                                        onClick={() => onSplit(transaction)}
+                                    >
+                                        <Users className="mr-2 h-4 w-4" />
+                                        Repartir
+                                    </DropdownMenuItem>
+                                ) : null}
                                 
                                 <DropdownMenuSeparator />
 
@@ -255,6 +266,7 @@ export default function TransactionsTable({
     pagination,
     loading = false,
     onEdit,
+    onSplit,
     onDelete,
     onPageChange,
     onPageSizeChange
@@ -269,7 +281,7 @@ export default function TransactionsTable({
     }
 
     const columns = useMemo(
-        () => createColumns(onEdit, handleRequestDelete),
+        () => createColumns(onEdit, handleRequestDelete, onSplit),
         [onEdit],
     );
 

@@ -1,6 +1,9 @@
 import AppLayout from "@/components/layouts/AppLayout"
 import TransactionForm from "@/components/transactions/TransactionForm";
 import TransactionsTable from "@/components/transactions/TransactionsTable";
+import SharesDialog from "@/components/transactions/SharesDialog";
+import CollectShareDialog from "@/components/transactions/CollectShareDialog";
+import type { TransactionShare } from "@/types/transactionShare";
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { getApiErrorMessage } from "@/lib/utils";
@@ -23,6 +26,12 @@ export default function Transactions() {
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [pagination, setPagination] =
       useState<TransactionPagination>(defaultPagination);
+
+    const [splitTxn, setSplitTxn] = useState<Transaction | null>(null);
+    const [sharesReloadKey, setSharesReloadKey] = useState(0);
+    const [collectTarget, setCollectTarget] = useState<
+      { share: TransactionShare; currency: string } | null
+    >(null);
 
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -121,6 +130,21 @@ export default function Transactions() {
       setPage(1);
     };
 
+    const handleSplit = (transaction: Transaction) => {
+      setSplitTxn(transaction);
+    };
+
+    const handleCollect = (share: TransactionShare) => {
+      if (!splitTxn) return;
+      setCollectTarget({ share, currency: splitTxn.account.currency });
+    };
+
+    const handleCollectSuccess = () => {
+      setCollectTarget(null);
+      setSharesReloadKey((key) => key + 1);
+      setReloadKey((key) => key + 1);
+    };
+
     return (
       <AppLayout
         title="Mis transaciones"
@@ -141,6 +165,7 @@ export default function Transactions() {
             pagination={pagination}
             loading={loading}
             onEdit={handleEdit}
+            onSplit={handleSplit}
             onDelete={handleDelete}
             onPageChange={handlePageChange}
             onPageSizeChange={handlePageSizeChange}
@@ -166,6 +191,26 @@ export default function Transactions() {
             />
           </DialogContent>
         </Dialog>
+
+        <SharesDialog
+          transaction={splitTxn}
+          open={!!splitTxn}
+          onOpenChange={(open) => {
+            if (!open) setSplitTxn(null);
+          }}
+          onCollect={handleCollect}
+          reloadKey={sharesReloadKey}
+        />
+
+        <CollectShareDialog
+          share={collectTarget?.share ?? null}
+          currency={collectTarget?.currency ?? "PEN"}
+          open={!!collectTarget}
+          onOpenChange={(open) => {
+            if (!open) setCollectTarget(null);
+          }}
+          onSuccess={handleCollectSuccess}
+        />
       </AppLayout>
     )
 }
