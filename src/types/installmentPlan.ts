@@ -1,4 +1,4 @@
-import z, {} from "zod";
+import { z } from "zod";
 import type { Currency } from "./currency";
 import type { PayStatus } from "./loan";
 

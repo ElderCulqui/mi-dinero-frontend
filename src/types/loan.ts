@@ -20,7 +20,7 @@ export interface LoanPayment {
     id: number;
     loanId: number;
     number: number;
-    duaDate: string;
+    dueDate: string;
     amount: number;
     paidAmount: number;
     status: PayStatus;
@@ -62,10 +62,10 @@ export interface LoanUpdateData {
 export const loanSchema = z.object({
     name: z.string().min(1, "El nombre es obligatorio").max(100, "Máximo 100 caracteres"),
     currency: z.enum(["PEN", "USD"]),
-    principal: z.number({ error: "Ingresa el capital" }).min(0.01, "Debe ser mayot a 0"),
+    principal: z.number({ error: "Ingresa el capital" }).min(0.01, "Debe ser mayor a 0"),
     totalAmount: z.number({ error: "Ingresa el monto total" }).min(0.01, "Debe ser mayor a 0"),
     interestRate: z.number().min(0, "Debe ser >= 0").max(9.9999).nullable().optional(),
-    termMonths: z.number({ error: "Ingresa el número de coutas" }).int().min(1, "Mínimo 1").max(999),
+    termMonths: z.number({ error: "Ingresa el número de cuotas" }).int().min(1, "Mínimo 1").max(999),
     startDate: z.string({ error: "La fecha de inicio es obligatoria"}).min(1, "La fecha de inicio es obligatoria"),
     accountId: z.number().int().positive().nullable().optional(),
     categoryId: z.number().int().positive().nullable().optional(),

@@ -10,6 +10,8 @@ import CardShow from "./pages/CardShow";
 import Transactions from "./pages/Transactions";
 import Contacts from "./pages/Contacts";
 import Transfers from "./pages/Transfers";
+import Loans from "./pages/Loans";
+import InstallmentPlans from "./pages/InstallmentPlans";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -83,6 +85,22 @@ function App() {
           element={
             <ProtectedRoute>
               <Transfers />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/loans"
+          element={
+            <ProtectedRoute>
+              <Loans />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/installment-plans"
+          element={
+            <ProtectedRoute>
+              <InstallmentPlans />
             </ProtectedRoute>
           }
         />

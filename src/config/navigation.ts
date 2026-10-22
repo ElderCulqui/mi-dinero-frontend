@@ -1,4 +1,4 @@
-import { LayoutDashboard, Wallet, FolderOpen, CreditCard, ArrowLeftRight, Users, Repeat } from "lucide-react";
+import { LayoutDashboard, Wallet, FolderOpen, CreditCard, ArrowLeftRight, Users, Repeat, Landmark, CalendarClock } from "lucide-react";
 // import { CreditCard, TrendingUp, Settings } from "lucide-react";
 
 export const menuItems = [
@@ -26,6 +26,16 @@ export const menuItems = [
     title: "Tarjetas",
     href: "/cards",
     icon: CreditCard,
+  },
+  {
+    title: "Préstamos",
+    href: "/loans",
+    icon: Landmark,
+  },
+  {
+    title: "Planes en cuotas",
+    href: "/installment-plans",
+    icon: CalendarClock,
   },
   {
     title: "Contactos",
