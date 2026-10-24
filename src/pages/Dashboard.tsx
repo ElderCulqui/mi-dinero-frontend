@@ -14,6 +14,7 @@ import {
   TrendingDown,
 } from "lucide-react";
 import ExchangeRateCard from "@/components/ExchangeRateCard";
+import RecentTransacionts from "@/components/dashboard/RecentTransacionts";
 
 export default function Dashboard() {
   
@@ -93,7 +94,7 @@ export default function Dashboard() {
           <CardTitle>Transacciones Recientes</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">No hay transacciones aún.</p>
+          <RecentTransacionts />
         </CardContent>
       </Card>
     </AppLayout>
